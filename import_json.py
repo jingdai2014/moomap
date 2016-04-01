@@ -12,7 +12,7 @@ with open(filename)as data_file:
 	records = json.load(data_file)["pam"]
 
 for r in records:
-	pam_entered = Pam(int(r["desk"]), int(r["class"]), datetime.datetime.strptime(r["time"], "%a, %d %b %Y %H:%M:%S %Z"), r["tag"], int(r["arousal"]), int(r["valence"]), int(r["na"]), int(r["pa"]))
+	pam_entered = Pam(int(r["deskId"]), int(r["classId"]), datetime.datetime.strptime(r["time"], "%a, %d %b %Y %H:%M:%S %Z"), r["tag"], int(r["arousal"]), int(r["valence"]), int(r["na"]), int(r["pa"]))
 	db.session.add(pam_entered)
 
 print "DB inserted."
