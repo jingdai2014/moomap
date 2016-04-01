@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block body %}
+<div>
+</br>
+	<form action="/add" method="post" class="form">
+	<input style="position: absolute; font-size:30px; border:none; left:0;" name="deskId" value="{{deskId}}">
+	<div class="title-text">Hi, how are you feeling today?</div>
+	
+		<div class="pam">
+			{% for i in range(0, 16)%}
+			<div><img class="pam-img" src="static/images-medium/{{pam_seq[i]}}.jpg" name="{{pam_seq[i]}}" height="180" width="180"></div>
+			{% endfor %}
+		</div>
+		<input class="pam-val" name="pam" style="opacity:0;">
+		<input class="btn primary button submit-btn" type="submit" value="Submit">
+	</form>
+</div>
+
+{% endblock %}

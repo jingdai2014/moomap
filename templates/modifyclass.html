@@ -1,0 +1,148 @@
+{% extends "layout.html" %}
+{% block body %}
+<div class="classwrapper">
+	{% if thisclass == 0 %}
+	<form action="/modifyclass" method="post" class="form-group">
+	{% else %}
+	<form action="/confirmmodify" method="post" class="form-group">
+	{% endif %}
+		<h3> Select Class to Modify: </h3>
+		<select name="oldclass" onchange="this.form.submit()" class="form-control">
+			<option>-</option>
+			{% for c in classes %}
+				{% if c[1] == name %}
+				<option selected value={{c[0]}}>{{c[1]}}</option>
+				{% else %}
+				<option value={{c[0]}}>{{c[1]}}</option>
+				{% endif %}
+			{% endfor %}
+		</select>
+		<br><br>
+		{% if thisclass != 0 %}
+		Class name: <br>
+		<input type="text" name="classname" id="classname" value="{{name}}" class="form-control"><br>
+		Number of rows: <br>
+		<select name="rownumber" id="rownumber" onchange="refreshMap()" class="form-control">
+		{% for i in range(1,11) %}
+			{% if i == rows %}
+			<option selected value={{i}}>{{i}}</option>
+			{% else %}
+			<option value={{i}}>{{i}}</option>
+			{% endif %}
+		{% endfor %}
+		</select> <br>
+		Number of columns: <br>
+		<select name="columnnumber" id="columnnumber" onchange="refreshMap()" class="form-control">
+		{% for i in range(1,11) %}
+			{% if i == columns %}
+			<option selected value={{i}}>{{i}}</option>
+			{% else %}
+			<option value={{i}}>{{i}}</option>
+			{% endif %}
+		{% endfor %}
+		</select> <br>
+		{% if sequential %}
+		<input type="checkbox" name="sequential" value="sequential" checked>Sequential<br><br>
+		{% else %}
+		<input type="checkbox" name="sequential" value="sequential">Sequential<br><br>
+		{% endif %}
+		<div id="classmap">
+			<div id="currentmap">
+				{% for i in range(0, rows)%}
+					{% for j in range(0, columns)%}
+						{% if (i|string+'-'+j|string) in disabledDesks%}
+						<img src="static/css/singleseat.png" height="100" width="100" class="singleseat" name="{{i}}-{{j}}" style="opacity:0.5;">
+						{% else %}
+						<img src="static/css/singleseat.png" height="100" width="100" class="singleseat" name="{{i}}-{{j}}">
+						{% endif %}
+					{% endfor %}
+				</br>
+				{% endfor %}
+			</div>
+		</div>
+		<br><br>
+		<input class="btn primary button submit-btn" type="submit" value="Submit">
+		<input type="text" name="disabledclass" id="disabledclass" class="disabledclass" value="{{disabledDesks|string}}" style="opacity:0;"><br>
+		<input type="text" name="olddisabledclass" id="olddisabledclass" class="olddisabledclass" value="{{disabledDesks|string}}" style="opacity:0;"><br>
+		{% endif %}
+	</form>
+</div>
+
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+var disClass = $(".disabledclass").val();
+$(".disabledclass").val(disClass.replace(/\[|'| /g,'').replace('\]',','));
+$(".olddisabledclass").val(disClass.replace(/\[|'| /g,'').replace('\]',','));
+
+$('.singleseat').on({
+  click: function() {
+    var thisName = $(this).attr('name');
+	var currValue = $("#disabledclass").val();
+	if ($(this).css("opacity") == '1') {
+		$(this).css({'opacity': '0.5'});
+		// alert($("#disabledclass").val());
+		$("#disabledclass").val(currValue + thisName + ",");
+	} 
+	else {
+		$(this).css({'opacity': '1'});
+		$("#disabledclass").val(currValue.replace(thisName + ",", ""));
+	}
+  },
+});
+
+
+function refreshMap() {
+	var classmap = document.getElementById("classmap");
+	var currentmap = document.getElementById("currentmap");
+	classmap.removeChild(currentmap);
+
+	currentmap = document.createElement("DIV");
+	currentmap.id = "currentmap";
+	var lineBreak = document.createElement('br');
+	var img = document.createElement("IMG");
+	var rowDD = document.getElementById("rownumber");
+	var colDD = document.getElementById("columnnumber");
+	var col = parseInt(colDD.options[colDD.selectedIndex].value);
+	var row = parseInt(rowDD.options[rowDD.selectedIndex].value);
+
+	for (i = 0; i < row; i++) {
+		for (j = 0; j < col; j++) {
+			img = document.createElement("IMG");
+			img.src = "static/css/singleseat.png";
+			img.height = "100";
+			img.width = "100";
+			img.name = i.toString() + "-" + j.toString();
+			img.onclick = function() {
+				var thisName = $(this).attr('name');
+				var currValue = $("#disabledclass").val();
+				if ($(this).css("opacity") == '1') {
+					$(this).css({'opacity': '0.5'});
+					// alert($("#disabledclass").val());
+					$("#disabledclass").val(currValue + thisName + ",");
+				} 
+				else {
+					$(this).css({'opacity': '1'});
+					$("#disabledclass").val(currValue.replace(thisName + ",", ""));
+				}
+			};
+			currentmap.appendChild(img);
+		}
+		lineBreak = document.createElement('br');
+		currentmap.appendChild(lineBreak);
+	}
+	classmap.appendChild(currentmap)
+	$("#disabledclass").val("");
+
+	disabledDesk = [];
+}
+
+function deskClick() {
+	alert("deskClick");
+	// disabledDesk.push(ele.value);
+	// ele.style = "opacity=0.5;";
+}
+
+
+</script>
+{% endblock %}

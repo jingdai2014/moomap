@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+{% block body %}
+<div>
+	<form action="/selectdesk" method='POST'>
+	<div class="title-text">Select Class</div>
+	<select name="classname" onchange="this.form.submit()">
+		<option>-</option>
+		{% for c in classes %}
+			<option value={{c[0]}}>{{c[1]}}</option>
+		{% endfor %}
+	</select>
+	</form>
+	</br> </br>
+	
+	{% if thisclass != 0 %}
+	<form action="/pam" method='POST'>
+	{% for i in range(0, rows)%}
+		{% for j in range(0, columns)%}
+			{% if (j+i*columns) in desks %}
+				<img src="static/css/singleseat.png" height="100" width="100" style="opacity: 0.5;">
+			{% else %}
+				<button name={{thisclass|string + "-" + i|string + "-" + j|string}} ><img src="static/css/singleseat.png" height="100" width="100"></button>
+			{% endif %}
+		{% endfor %}
+	</br>
+	{% endfor %}
+	<img src="static/css/teacherdesk.png" height="100" width="200">
+	</form>
+	{% endif %}
+
+</div>
+{% endblock %}

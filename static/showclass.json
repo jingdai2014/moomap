@@ -1,0 +1,20 @@
+{
+  "classes": [
+    {
+      "active": true,
+      "columns": 3,
+      "name": "Intro to CM",
+      "rows": 4,
+      "sequential": true,
+      "timestamp": "Wed, 30 Mar 2016 08:51:52 GMT"
+    },
+    {
+      "active": true,
+      "columns": 4,
+      "name": "The Child School",
+      "rows": 3,
+      "sequential": true,
+      "timestamp": "Wed, 30 Mar 2016 08:52:27 GMT"
+    }
+  ]
+}
