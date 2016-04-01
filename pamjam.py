@@ -3,6 +3,7 @@ from flask import Flask, request, redirect, render_template, g, jsonify, flash, 
 from contextlib import closing
 import datetime
 from application import db
+from pytz import timezone
 
 from application.models import Pam, Moonikin, Classroom, Desk
 import collections
@@ -100,7 +101,7 @@ def pick_color():
     classId = request.cookies.get('classId')
     deskId = request.cookies.get('deskId')
 
-    pam_entered = Pam(int(deskId), int(classId), datetime.datetime.now(), pam_tag[1], pam_tag[3], pam_tag[2], NA, PA)
+    pam_entered = Pam(int(deskId), int(classId), datetime.datetime.now(timezone('US/Eastern')), pam_tag[1], pam_tag[3], pam_tag[2], NA, PA)
     
     db.session.add(pam_entered)
     db.session.commit()        
@@ -197,7 +198,7 @@ def addclass():
     if request.form.getlist('sequential'):
         sequential = True
 
-    class_entered = Classroom(str(request.form['classname']), int(request.form['rownumber']), int(request.form['columnnumber']), datetime.datetime.now(), sequential, True)
+    class_entered = Classroom(str(request.form['classname']), int(request.form['rownumber']), int(request.form['columnnumber']), datetime.datetime.now(timezone('US/Eastern')), sequential, True)
     db.session.add(class_entered)
     db.session.commit()
     disabled_classes = request.form['disabledclass'].split(',')
@@ -266,7 +267,7 @@ def confirmmodify():
                 Classroom.query.filter_by(id=classId).update({"sequential": newSequential})
     else:
         Classroom.query.filter_by(id=classId).update({"active": False})
-        class_entered = Classroom(str(request.form['classname']), int(request.form['rownumber']), int(request.form['columnnumber']), datetime.datetime.now(), newSequential, True)
+        class_entered = Classroom(str(request.form['classname']), int(request.form['rownumber']), int(request.form['columnnumber']), datetime.datetime.now(timezone('US/Eastern')), newSequential, True)
         db.session.add(class_entered)
         db.session.commit()
         
@@ -314,7 +315,7 @@ def add_moonikin():
     valence = int(request.form['valence'])
     control = int(request.form['control'])
     arousal = int(request.form['arousal'])
-    moonikin_entered = Moonikin(int(request.form['uid']), str(datetime.datetime.now()), valence, control, arousal)
+    moonikin_entered = Moonikin(int(request.form['uid']), str(datetime.datetime.now(timezone('US/Eastern'))), valence, control, arousal)
         
     db.session.add(moonikin_entered)
     db.session.commit()        
