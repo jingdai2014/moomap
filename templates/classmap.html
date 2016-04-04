@@ -43,16 +43,11 @@
 	});
 
 	promise.then(function(val) {
-	  // console.log(val); // 1
-	  // return val + 2;
 	  $(document).ready(function(){
 		createHeatmap(val, {{rows}}, {{columns}}, "pa");
 	  });
 	});
 
-	// $(document).ready(function(){
-	// 	createHeatmap({{pams|tojson}}, {{rows}}, {{columns}}, "pa");
-	// });
 	$('#heatmapform input').on('change', function(){
 		clearheatmap();
 		var opt = $('input[name="options"]:checked', '#heatmapform').val();
