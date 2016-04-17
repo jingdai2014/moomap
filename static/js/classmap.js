@@ -1,8 +1,37 @@
 var heatmapInstance;
 function createHeatmap(pams, rows, columns, type) {// minimal heatmap instance configuration
+  grad = {}
+  if (type == "pa") {
+    grad = {
+      '.01': '#F3F3F3',
+      '.25': '#F1CAC1',
+      '.35': '#EEB58F',
+      '.45': '#E9C430',
+      '.55': '#E7E72E',
+      '.65': '#A0D71D',
+      '.75': '#63C70E',
+      '.85': '#63C70E',
+      '.95': '#51A80A'
+    }
+  } else {
+    grad = {
+      '.15': '#404BFB',
+      '.25': '#0465FB',
+      '.35': '#6CF8FC',
+      '.45': '#75F169',
+      '.55': '#76F013',
+      '.65': '#CAF427',
+      '.75': '#F49831',
+      '.85': '#ED462F'
+    }
+  }
+
   heatmapInstance = h337.create({
     // only container is required, the rest will be defaults
-    container:  document.getElementById('heatmapContainer')
+    container:  document.getElementById('heatmapContainer'),
+
+    // custom gradient colors
+    gradient: grad
   });
   // now generate some random data
   var points = [];

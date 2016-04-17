@@ -14,6 +14,7 @@
 		</select>
 		<input type="text" name="classid" id="classid" value="{{classId}}" style="opacity:0;">
 	</form>
+
 	<div id="heatmapContainerWrapper">
       	<div id="heatmapContainer">
 			{% for i in range(0, rows)%}
@@ -29,8 +30,6 @@
 		<form id="heatmapform">
 	      	<label style="width:24%;display: inline-block;font-size: 25px;"><input type="radio" name="options" id="pa" value="pa" checked="checked"> Positive Affect</label>
 			<label style="width:24%;display: inline-block;font-size: 25px;"><input type="radio" name="options" id="na" value="na"> Negative Affect</label>
-			<label style="width:24%;display: inline-block;font-size: 25px;"><input type="radio" name="options" id="val" value="val"> Valence</label>
-			<label style="width:24%;display: inline-block;font-size: 25px;"><input type="radio" name="options" id="ar" value="ar"> Arousal</label>
 		</form>
 	</div>
 </div>
