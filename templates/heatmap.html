@@ -21,7 +21,8 @@
 
 	promise.then(function(val) {
 	  $(document).ready(function(){
-		createHeatmap(val, {{rows}}, {{columns}}, "pa");
+	  	// alert("{{optType}}");
+		createHeatmap(val, {{rows}}, {{columns}}, "{{optType}}");
 	  });
 	});
 </script>

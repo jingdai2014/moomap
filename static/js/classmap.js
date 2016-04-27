@@ -89,7 +89,3 @@ function createHeatmap(pams, rows, columns, type) {// minimal heatmap instance c
   heatmapInstance.setData(data);
 
 }
-
-function clearheatmap() {
-  heatmapInstance.setData({data:[]});
-}

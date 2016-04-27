@@ -2,30 +2,22 @@
 {% block body %}
 <div>
 	<div class="title-text">Class Map</div>
-	<form action="/classmap" method="post" class="form-group" id="classform">
-		<select name="time" id="time" class="form-control" style="width:720px;margin:auto;">
-			{% for tg in timeGroup %}
-				{% if tg[1] == mapTime%}
-				<option value={{tg[0]}} selected>{{tg[1]}}</option>
-				{% else %}
-				<option value={{tg[0]}}>{{tg[1]}}</option>
-				{% endif %}
-			{% endfor %}
-		</select>
-		<input type="text" name="classid" id="classid" value="{{classId}}" style="opacity:0;">
-	</form>
+	<select name="time" id="time" class="form-control" style="width:720px;margin:auto;">
+		{% for tg in timeGroup %}
+			{% if tg[1] == mapTime%}
+			<option value={{tg[0]}} selected>{{tg[1]}}</option>
+			{% else %}
+			<option value={{tg[0]}}>{{tg[1]}}</option>
+			{% endif %}
+		{% endfor %}
+	</select>
+	<input type="text" name="classid" id="classid" value="{{classId}}" style="opacity:0;">
 
 	<div id="heatmapContainerWrapper">
-      	<div id="heatmapContainer">
-			{% for i in range(0, rows)%}
-				{% for j in range(0, columns)%}
-					<img src="static/css/singleseat.png" height="100" width="100" style="margin-left: {{ (720-100*columns)/(columns+1) }}px; margin-top: {{ (512-100*rows)/(rows+1) }}px;" />
-				{% endfor %}
-				</br>
-			{% endfor %}
-      	</div>
     </div>
+
     </br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
+
 	<div>
 		<form id="heatmapform">
 	      	<label style="width:24%;display: inline-block;font-size: 25px;"><input type="radio" name="options" id="pa" value="pa" checked="checked"> Positive Affect</label>
@@ -40,29 +32,29 @@
 <script src="{{ url_for('static', filename='js/classmap.js')}}"></script>
 <script type="text/javascript">
 	var promise = new Promise(function(resolve, reject) {
-	  resolve({{pams|tojson}});
+	  resolve();
 	});
 
-	promise.then(function(val) {
+	promise.then(function() {
 	  $(document).ready(function(){
-		createHeatmap(val, {{rows}}, {{columns}}, "pa");
+		reloadHeatmap();
 	  });
 	});
 
 	$('#heatmapform input').on('change', function(){
-		clearheatmap();
-		var opt = $('input[name="options"]:checked', '#heatmapform').val();
-		createHeatmap({{pams|tojson}}, {{rows}}, {{columns}}, opt);
+		reloadHeatmap();
 	});
 
 	$('#time').change(function() {
-		var mapTime = $('#time').val()
-		var classId = $('#classid').val()
-		$( "#heatmapContainerWrapper" ).load( "/heatmap", {time: mapTime, classid: classId});
-		// $( "#heatmapContainerWrapper" ).promise().done(function() {
-		// 	$( "p" ).append( " Finished! " );
-		// });
+		reloadHeatmap()
 	});
+
+	function reloadHeatmap() {
+		var opt = $('input[name="options"]:checked', '#heatmapform').val();
+		var mapTime = $('#time').val();
+		var classId = $('#classid').val();
+		$( "#heatmapContainerWrapper" ).load( "/heatmap", {time: mapTime, classid: classId, optType: opt});
+	}
 	// onchange="this.form.submit()"
 </script>
 
