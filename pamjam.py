@@ -139,43 +139,14 @@ def showpam():
 
 @app.route('/classmap', methods=['POST'])
 def classmap():
-    classId = request.form['classid']
-    c = Classroom.query.filter_by(id = int(classId)).first()
-    p = Pam.query.filter_by(classId = int(classId)).order_by(desc(Pam.time))
-    pamTime = [pt.time for pt in p]
-    timeGroup = []
-    for pt in pamTime:
-        if not timeGroup:
-            timeGroup.append(pt)
-            continue
-        if pt < timeGroup[-1] - datetime.timedelta(minutes = 10):
-            timeGroup.append(pt)
+    heatmapData = post_heatmap(request)
+    return render_template('classmap.html', pams=heatmapData[0], timeGroup=heatmapData[3], mapTime=heatmapData[4], classId=heatmapData[5])
 
-    timeGroup = [(tg.strftime("%B %d, %Y - %H:%M").replace(" ", "_"), tg.strftime("%B %d, %Y - %H:%M")) for tg in timeGroup]
-    # return str(datetime.datetime.strptime(timeGroup[0], "%B %d, %Y - %H:%M") - datetime.timedelta(minutes = 10))
-    # if not request.form['time']:
-    try:
-        mapTime = request.form['time'].replace("_", " ")
-    except:
-        mapTime = timeGroup[0][1]
-
-    timeline = datetime.datetime.strptime(mapTime, "%B %d, %Y - %H:%M") - datetime.timedelta(minutes = 10)
-    # return str(timeline)
-    pclass = Pam.query.filter(Pam.classId == int(request.form['classid'])).filter(Pam.time >= timeline).all()
-
-    pams = []
-    deskids = []
-    for pam_row in pclass:
-        # get only the most recent record for each deskId
-        if (pam_row.deskId in deskids):
-            continue
-        pam = {"deskId": pam_row.deskId, "time": pam_row.time, "tag": pam_row.tag, "arousal": pam_row.arousal, "valence": pam_row.valence, 
-        "na": pam_row.na, "pa": pam_row.pa}
-        pams.append(pam)
-        deskids.append(pam_row.deskId)
-
-    del deskids
-    return render_template('classmap.html', pams={"pam": pams}, rows=c.rows, columns=c.columns, timeGroup=timeGroup, mapTime=mapTime, classId=classId)
+@app.route('/heatmap', methods=['POST'])
+def heatmap():
+    heatmapData = post_heatmap(request)
+    optType = request.form['optType']
+    return render_template('heatmap.html', pams=heatmapData[0], rows=heatmapData[1], columns=heatmapData[2], classId=heatmapData[5], optType=optType)
 
 @app.route('/selectclass')
 def selectclass():
@@ -346,6 +317,48 @@ def redirect_url(default='home'):
     return request.args.get('home') or \
            request.referrer or \
            url_for(default)
+
+def post_heatmap(req):
+    classId = req.form['classid']
+    c = Classroom.query.filter_by(id = int(classId)).first()
+    p = Pam.query.filter_by(classId = int(classId)).order_by(desc(Pam.time))
+    pamTime = [pt.time for pt in p]
+    timeGroup = []
+    for pt in pamTime:
+        if not timeGroup:
+            timeGroup.append(pt)
+            continue
+        if pt < timeGroup[-1] - datetime.timedelta(minutes = 10):
+            timeGroup.append(pt)
+
+    timeGroup = [(tg.strftime("%B %d, %Y - %H:%M").replace(" ", "_"), tg.strftime("%B %d, %Y - %H:%M")) for tg in timeGroup]
+    # return str(datetime.datetime.strptime(timeGroup[0], "%B %d, %Y - %H:%M") - datetime.timedelta(minutes = 10))
+    # if not request.form['time']:
+    try:
+        mapTime = req.form['time'].replace("_", " ")
+    except:
+        mapTime = timeGroup[0][1]
+
+    timeline = datetime.datetime.strptime(mapTime, "%B %d, %Y - %H:%M") - datetime.timedelta(minutes = 10)
+    # return str(timeline)
+    pclass = Pam.query.filter(Pam.classId == int(request.form['classid'])).filter(Pam.time >= timeline).all()
+
+    pams = []
+    deskids = []
+    for pam_row in pclass:
+        # get only the most recent record for each deskId
+        if (pam_row.deskId in deskids):
+            continue
+        pam = {"deskId": pam_row.deskId, "time": pam_row.time, "tag": pam_row.tag, "arousal": pam_row.arousal, "valence": pam_row.valence, 
+        "na": pam_row.na, "pa": pam_row.pa}
+        pams.append(pam)
+        deskids.append(pam_row.deskId)
+
+    del deskids
+
+    return ({"pam": pams}, c.rows, c.columns, timeGroup, mapTime, classId)
+    # return render_template(url, pams={"pam": pams}, rows=c.rows, columns=c.columns, timeGroup=timeGroup, mapTime=mapTime, classId=classId)
+
 
 if __name__ == '__main__':
 	app.run(debug=True)
