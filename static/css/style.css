@@ -200,3 +200,19 @@ input[type=submit]:active{
   line-height: 25px;
   text-decoration: underline;
 }
+
+#centerwrapper {
+  text-align: center;
+}
+
+#slider {
+  display: inline-block;
+  width: 200px;
+}
+
+.yui3-button {
+  display: inline-block;
+  margin:10px 0px 10px 0px;
+  color: #fff;
+  background-color: #3476b7;
+}

@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% block body %}
+<div>
+	<div class="title-text">Class Map</div>
+	<div id="centerwrapper">    
+		<div id="slider"></div>
+		<p>
+			<input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
+		</p>
+
+		<div id="calendar" class="yui3-skin-sam">
+			<div class="yui3-u">
+			     <!-- Container for the calendar -->
+			     <div id="mycalendar"></div>
+			</div>
+		</div>
+		<p>
+			<div id="links" style="padding-left:20px;">
+		    	Selected date: <span id="selecteddate"></span>
+			</div>
+		</p>		
+	</div>
+    </br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
+
+</div>
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+	$(function() {
+		$("#slider").slider({
+			value: 0,
+			min: 0,
+			max: 40,
+			step: 10,
+			slide: function(event, ui){
+				$("#amount").val(ui.value);
+			}
+		});
+		$("#amount").val("$"+$("#slider").slider("value"));
+	})
+
+	YUI().use('calendar', 'datatype-date', 'cssbutton',  function(Y) {
+
+	    // Create a new instance of calendar, placing it in
+	    // #mycalendar container, setting its width to 340px,
+	    // the flags for showing previous and next month's
+	    // dates in available empty cells to true, and setting
+	    // the date to today's date.
+	    var calendar = new Y.Calendar({
+	      contentBox: "#mycalendar",
+	      width:'340px',
+	      showPrevMonth: true,
+	      showNextMonth: true,
+	      date: new Date()}).render();
+
+	    // Get a reference to Y.DataType.Date
+	    var dtdate = Y.DataType.Date;
+
+	    // Listen to calendar's selectionChange event.
+	    calendar.on("selectionChange", function (ev) {
+
+	      // Get the date from the list of selected
+	      // dates returned with the event (since only
+	      // single selection is enabled by default,
+	      // we expect there to be only one date)
+	      var newDate = ev.newSelection[0];
+
+	      // Format the date and output it to a DOM
+	      // element.
+	      Y.one("#selecteddate").setHTML(dtdate.format(newDate));
+	    });
+	});
+</script>
+
+{% endblock %}

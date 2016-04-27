@@ -334,6 +334,9 @@ def show_moonikins():
 
     return jsonify({"moonikins": moonikins}) 
 """
+@app.route('/soundmap')
+def sound():
+    return render_template('soundmap.html')
 
 @app.route('/thanks')
 def thanks():
