@@ -1,7 +1,30 @@
 {% extends "layout.html" %}
 {% block body %}
-<div>
-	<div class="title-text">Class Map</div>
+<div id="wrapper">
+	<div id="sidebar-wrapper"> 
+		<div>
+			<img src="static/css/logo.png" height="150" width="150" />
+		</div>
+		<div class="title-text map-title">Mood Map</div>
+		<div id="calendar" class="yui3-skin-sam">
+			<p>Please select a date:</p>
+			<div class="yui3-u">
+		    	<!-- Container for the calendar -->
+		    	<div id="mycalendar"></div>
+			</div>
+		</div>
+
+		<form id="toggleform" class="switch-toggle well">
+		    <input id="before" name="selectedtime" type="radio" value="before" checked="checked">
+		    <label for="before">Before class</label>
+
+		    <input id="after" name="selectedtime" type="radio" value="after">
+		    <label for="after">After class</label>
+	    	<a class="btn btn-info"></a>
+		</form>
+		<footer>© 2016 Copyright Team Moo</footer>
+	</div>
+	<!--
 	<select name="time" id="time" class="form-control" style="width:720px;margin:auto;">
 		{% for tg in timeGroup %}
 			{% if tg[1] == mapTime%}
@@ -11,22 +34,21 @@
 			{% endif %}
 		{% endfor %}
 	</select>
+	-->
 	<input type="text" name="classid" id="classid" value="{{classId}}" style="opacity:0;">
-
-	<div id="heatmapContainerWrapper">
-    </div>
-
-    </br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
-
-	<div>
+	<div id="page-content-wrapper">
 		<form id="heatmapform">
 	      	<label style="width:24%;display: inline-block;font-size: 25px;"><input type="radio" name="options" id="pa" value="pa" checked="checked"> Positive Affect</label>
 			<label style="width:24%;display: inline-block;font-size: 25px;"><input type="radio" name="options" id="na" value="na"> Negative Affect</label>
 		</form>
+
+		<div id="heatmapContainerWrapper">
+	    </div>
+
+		<div id="testAjax">
+		</div>
+		</div>
 	</div>
-	<div id="testAjax">
-	</div>
-</div>
 {% endblock %}
 {% block script %}
 <script src="{{ url_for('static', filename='js/classmap.js')}}"></script>
@@ -37,6 +59,8 @@
 
 	promise.then(function() {
 	  $(document).ready(function(){
+	  	$("#before").val("April_22,_2016_-_09:01");
+	  	$('#after').val("April_22,_2016_-_09:40");
 		reloadHeatmap();
 	  });
 	});
@@ -45,17 +69,61 @@
 		reloadHeatmap();
 	});
 
-	$('#time').change(function() {
-		reloadHeatmap()
-	});
+	//$('#time').change(function() {
+	//	reloadHeatmap()
+	//});
 
 	function reloadHeatmap() {
 		var opt = $('input[name="options"]:checked', '#heatmapform').val();
-		var mapTime = $('#time').val();
+		//var mapTime = $('#time').val();
+		var mapTime = $('input[name="selectedtime"]:checked', '#toggleform').val();
 		var classId = $('#classid').val();
 		$( "#heatmapContainerWrapper" ).load( "/heatmap", {time: mapTime, classid: classId, optType: opt});
 	}
 	// onchange="this.form.submit()"
+	$('#toggleform input').on('change', function(){
+		console.log($('input[name="selectedtime"]:checked', '#toggleform').val());
+		reloadHeatmap();
+	});
+
+	YUI().use('calendar', 'datatype-date', 'cssbutton',  function(Y) {
+	    var calendar = new Y.Calendar({
+	      contentBox: "#mycalendar",
+	      width:'340px',
+	      showPrevMonth: false,
+	      showNextMonth: false,
+	      date: new Date(2016, 3, 1)}).render();
+
+	    // Get a reference to Y.DataType.Date
+	    var dtdate = Y.DataType.Date;
+
+	    // Listen to calendar's selectionChange event.
+	    calendar.on("selectionChange", function (ev) {
+
+	      // Get the date from the list of selected
+	      // dates returned with the event (since only
+	      // single selection is enabled by default,
+	      // we expect there to be only one date)
+	      //var newDate = ev.newSelection[0];
+	      var newDate = Y.Date.format(ev.newSelection[0], {format: "%B %d, %Y"});
+	      //console.log(newDate);
+	      var intime = [];
+	      {% for tg in timeGroup %}
+	      	var curdate = "{{tg[1][0:14]}}";
+	      	if (curdate == newDate){
+	      		intime.push("{{tg[0]}}");
+	      	}
+	  	  {% endfor %}
+	      //console.log(intime);
+	      // Format the date and output it to a DOM
+	      // element.
+	      //Y.one("#starttime").setHTML(dtdate.format(newDate));
+
+	      Y.one("#before").set("value", intime[1]);
+	      Y.one("#after").set("value", intime[0]);
+	      reloadHeatmap();
+	    });
+	});
 </script>
 
 {% endblock %}
