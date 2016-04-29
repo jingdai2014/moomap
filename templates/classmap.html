@@ -35,20 +35,25 @@
 		{% endfor %}
 	</select>
 	-->
-	<input type="text" name="classid" id="classid" value="{{classId}}" style="opacity:0;">
+	
 	<div id="page-content-wrapper">
-		<form id="heatmapform">
-	      	<label style="width:24%;display: inline-block;font-size: 25px;"><input type="radio" name="options" id="pa" value="pa" checked="checked"> Positive Affect</label>
-			<label style="width:24%;display: inline-block;font-size: 25px;"><input type="radio" name="options" id="na" value="na"> Negative Affect</label>
+		<form id="heatmapform" class="tabs">
+	      	<input type="radio" name="tabs" id="pa" value="pa" checked="checked">
+			<label for="pa">
+	        	<img src="static/css/happy.png" height="40px" width="40px" />
+	    	</label>
+
+	    	<input type="radio" name="tabs" id="na" value="na">
+			<label for="na">
+	        	<img src="static/css/sad.png" height="40px" width="40px" />
+	    	</label>
+
+	    	<div id="heatmapContainerWrapper">
+	    	</div>
 		</form>
-
-		<div id="heatmapContainerWrapper">
-	    </div>
-
-		<div id="testAjax">
-		</div>
-		</div>
 	</div>
+	<input type="text" name="classid" id="classid" value="{{classId}}" style="opacity:0;">
+
 {% endblock %}
 {% block script %}
 <script src="{{ url_for('static', filename='js/classmap.js')}}"></script>
@@ -74,7 +79,7 @@
 	//});
 
 	function reloadHeatmap() {
-		var opt = $('input[name="options"]:checked', '#heatmapform').val();
+		var opt = $('input[name="tabs"]:checked', '#heatmapform').val();
 		//var mapTime = $('#time').val();
 		var mapTime = $('input[name="selectedtime"]:checked', '#toggleform').val();
 		var classId = $('#classid').val();
