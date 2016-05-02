@@ -64,8 +64,23 @@
 
 	promise.then(function() {
 	  $(document).ready(function(){
-	  	$("#before").val("April_22,_2016_-_09:01");
-	  	$('#after').val("April_22,_2016_-_09:40");
+  		var latestAfterTime = "{{timeGroup[0][0]}}";
+  		var latestBeforeTime = "{{timeGroup[1][0]}}";
+
+  		if (latestBeforeTime.substring(0,14) == latestAfterTime.substring(0,14)) {
+  			$("#before").val(latestBeforeTime);
+	  		$('#after').val(latestAfterTime);
+  		}
+  		else {
+  			$("#before").val(latestAfterTime);
+	  		$('#after').val(latestAfterTime);
+  		}
+  		// console.log("{{timeGroup}}");
+      	// if (curdate == newDate){
+      	// 	intime.push("{{timeGroup[0]}}");
+      	// }
+	  	// $("#before").val("April_22,_2016_-_09:01");
+	  	// $('#after').val("April_22,_2016_-_09:40");
 		reloadHeatmap();
 	  });
 	});
@@ -123,9 +138,14 @@
 	      // Format the date and output it to a DOM
 	      // element.
 	      //Y.one("#starttime").setHTML(dtdate.format(newDate));
-
-	      Y.one("#before").set("value", intime[1]);
-	      Y.one("#after").set("value", intime[0]);
+	      if (intime.length == 1){
+	      	Y.one("#before").set("value", intime[0]);
+	      	Y.one("#after").set("value", intime[0]);
+	      }
+	      else {
+	      	Y.one("#before").set("value", intime[1]);
+	      	Y.one("#after").set("value", intime[0]);
+		  }
 	      reloadHeatmap();
 	    });
 	});

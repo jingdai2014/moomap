@@ -26,7 +26,7 @@ form {
   background: white;
 }
 
-#heatmapContainer { width:720px; height:512px; position:absolute; opacity: 0.7;}
+#heatmapContainer { width:720px; height:512px; position:absolute; opacity: 0.7; text-align: left;}
 
 #heatmapform {
   margin-top: 20px;
@@ -301,8 +301,8 @@ input[type=submit]:active{
     position: relative;
     width: 47%;
     height: 50px;
-    background: #fff;
-    box-shadow: 0 0 0 5px #fff, 0 0 0 7px #fff, 0 0 0 15px #fff, 0 0 3px 15px #dcdcdc;
+    background: #dcdcdc;
+    box-shadow: 0 0 0 5px #dcdcdc, 0 0 0 7px #dcdcdc, 0 0 0 15px #dcdcdc, 0 0 8px 15px #dcdcdc;
     border-radius: 5px;
     transform: perspective(10px) rotateX(2deg);
     transform-origin: bottom;
@@ -310,14 +310,14 @@ input[type=submit]:active{
 
 .tabs label:hover {
   background: #f1f1f1;
-  box-shadow: 0 0 0 5px #f1f1f1, 0 0 0 7px #f1f1f1, 0 0 0 15px #f1f1f1, 0 0 2px 15px #f1f1f1;
+  box-shadow: 0 0 0 5px #f1f1f1, 0 0 0 7px #f1f1f1, 0 0 0 15px #f1f1f1, 0 0 8px 15px #dcdcdc;
 }
 
 input[name="tabs"] + label {
 
 } 
 input[name="tabs"]:checked + label {
-  background: #dcdcdc;
-  box-shadow: 0 0 0 5px #dcdcdc, 0 0 0 7px #dcdcdc, 0 0 0 15px #dcdcdc, 0 0 2px 15px #dcdcdc;
+  background: #fff;
+  box-shadow: 0 0 0 5px #fff, 0 0 0 7px #fff, 0 0 0 15px #fff, 0 0 8px 15px #dcdcdc;
   z-index: 1;
 } 

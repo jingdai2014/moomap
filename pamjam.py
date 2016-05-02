@@ -16,31 +16,50 @@ app.config.from_object(__name__)
 
 @app.route('/')
 def home():
-    classId = request.cookies.get('classId')
-    deskId  = request.cookies.get('deskId')
 
-    # uid = request.cookies.get('uid')
+    classId = request.args.get('classId', '')
+    # classId = int(request.form["classname"]) 
+    deskId = request.args.get('deskId', '')
+
     if not classId or not deskId:
-        classes = [(classroom.id, classroom.name) for classroom in Classroom.query.all()]
+            classes = [(classroom.id, classroom.name) for classroom in Classroom.query.all()]
 
-        return render_template('selectdesk.html', classes=classes, thisclass=0)
+            return render_template('selectdesk.html', classes=classes, thisclass=0)
     else:
-        pam_seq = range(1, 17)
-        random.shuffle(pam_seq)
-        pam_seq = [str(i) for i in pam_seq]
+        if not deskId:
+            classes = [(classroom.id, classroom.name) for classroom in Classroom.query.all()]
+            thisclass = Classroom.query.filter_by(id=classId).first()
+            desks = Desk.query.filter_by(classId=classId).all()
+            desksDisabled = [d.deskId for d in desks if d.enabled is False]
+            if thisclass.sequential:
+                resp = make_response(redirect(url_for('home')))
+                # resp.set_cookie('classId', str(classId))
+                # resp.set_cookie('deskId', 'sequential')
+                return resp
+            else:
+                return render_template('selectdesk.html', classes=classes, thisclass=classId, rows=thisclass.rows, columns=thisclass.columns, desks=desksDisabled)
+        else:
+        # classId = request.cookies.get('classId')
+        # deskId  = request.cookies.get('deskId')
 
-        for ps in range(len(pam_seq)):
-            pam_seq[ps] = pam_seq[ps] + "_" + str(random.randint(1, 3))
+        # uid = request.cookies.get('uid')
+            
+            pam_seq = range(1, 17)
+            random.shuffle(pam_seq)
+            pam_seq = [str(i) for i in pam_seq]
 
-        pam_seq = pam_seq
+            for ps in range(len(pam_seq)):
+                pam_seq[ps] = pam_seq[ps] + "_" + str(random.randint(1, 3))
 
-        resp = make_response(render_template('pam.html', pam_seq=pam_seq, deskId=deskId, classId=classId))
-        if deskId == 'sequential':
-            firstDesk = Desk.query.filter_by(classId=int(classId)).order_by(Desk.deskId).first()
-            resp = make_response(render_template('pam.html', pam_seq=pam_seq, deskId=firstDesk.deskId, classId=classId))
-            resp.set_cookie('deskId', str(firstDesk.deskId))
+            pam_seq = pam_seq
 
-        return resp
+            resp = make_response(render_template('pam.html', pam_seq=pam_seq, deskId=deskId, classId=classId))
+            if deskId == 'sequential':
+                firstDesk = Desk.query.filter_by(classId=int(classId)).order_by(Desk.deskId).first()
+                resp = make_response(render_template('pam.html', pam_seq=pam_seq, deskId=firstDesk.deskId, classId=classId))
+                resp.set_cookie('deskId', str(firstDesk.deskId))
+
+            return resp
 
 @app.route('/selectdesk', methods=['POST'])
 def select_desk():
@@ -50,9 +69,9 @@ def select_desk():
     desks = Desk.query.filter_by(classId=classId).all()
     desksDisabled = [d.deskId for d in desks if d.enabled is False]
     if thisclass.sequential:
-        resp = make_response(redirect(url_for('home')))
-        resp.set_cookie('classId', str(classId))
-        resp.set_cookie('deskId', 'sequential')
+        resp = make_response(redirect(url_for('home', classId=classId, deskId='sequential')))
+        # resp.set_cookie('classId', str(classId))
+        # resp.set_cookie('deskId', 'sequential')
         return resp
     else:
         return render_template('selectdesk.html', classes=classes, thisclass=classId, rows=thisclass.rows, columns=thisclass.columns, desks=desksDisabled)
@@ -60,12 +79,15 @@ def select_desk():
 @app.route('/pam', methods=['POST'])
 def pam():
     ids = request.form.keys()[0].split('-')
-    resp = make_response(redirect(url_for('home')))
-    classId = int(ids[0])
-    resp.set_cookie('classId', ids[0])
-    c = Classroom.query.filter_by(id = classId).first()
 
-    resp.set_cookie('deskId', str(int(ids[2]) + int(ids[1])*c.columns))
+    
+    classId = int(ids[0])
+    # resp.set_cookie('classId', ids[0])
+    c = Classroom.query.filter_by(id = classId).first()
+    deskId = str(int(ids[2]) + int(ids[1])*c.columns)
+    resp = make_response(redirect(url_for('home', classId=ids[0], deskId=deskId)))
+
+    # resp.set_cookie('deskId', str(int(ids[2]) + int(ids[1])*c.columns))
     return resp
 
 @app.route('/getcookie')
@@ -98,8 +120,9 @@ def pick_color():
     PA = 4 * pam_tag[2] + pam_tag[3] - 4
     NA = 4 * (5 - pam_tag[2]) + pam_tag[3] - 4
 
-    classId = request.cookies.get('classId')
-    deskId = request.cookies.get('deskId')
+    classId, deskId = request.form['classDesk'].split('-')
+    # classId = request.cookies.get('classId')
+    # deskId = request.cookies.get('deskId')
 
     pam_entered = Pam(int(deskId), int(classId), datetime.datetime.now(timezone('US/Eastern')), pam_tag[1], pam_tag[3], pam_tag[2], NA, PA)
     
@@ -109,7 +132,7 @@ def pick_color():
 
     #return redirect(url_for('desk'))
 
-    resp = make_response(redirect(url_for('thanks')))
+    resp = make_response(redirect(url_for('thanks', classId=classId, deskId=deskId)))
     thisclass = Classroom.query.filter_by(id=int(classId)).first()
     if thisclass.sequential:
         desks = Desk.query.filter_by(classId=int(classId)).all()
@@ -120,7 +143,8 @@ def pick_color():
             nextDesk = desksEnabled[0]
         else:
             nextDesk = desksEnabled[prevDesk+1]
-        resp.set_cookie('deskId', str(nextDesk))
+        resp = make_response(redirect(url_for('thanks', classId=classId, deskId=str(nextDesk))))
+        # resp.set_cookie('deskId', str(nextDesk))
 
     return resp
 
@@ -131,7 +155,7 @@ def showpam():
     pams = []
 
     for pam_row in p:
-        pam = {"class": pam_row.classId, "desk": pam_row.deskId, "time": pam_row.time, "tag": pam_row.tag, "arousal": pam_row.arousal, "valence": pam_row.valence, 
+        pam = {"id": pam_row.id, "class": pam_row.classId, "desk": pam_row.deskId, "time": pam_row.time, "tag": pam_row.tag, "arousal": pam_row.arousal, "valence": pam_row.valence, 
         "na": pam_row.na, "pa": pam_row.pa}
         pams.append(pam)
 
@@ -311,7 +335,9 @@ def sound():
 
 @app.route('/thanks')
 def thanks():
-    return render_template('thanks.html')
+    classId = request.args.get('classId', '')
+    deskId = request.args.get('deskId', '')
+    return render_template('thanks.html', classId=classId, deskId=deskId)
 
 def redirect_url(default='home'):
     return request.args.get('home') or \
