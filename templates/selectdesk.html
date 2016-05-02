@@ -1,34 +1,41 @@
 {% extends "layout.html" %}
 {% block body %}
-<div>
-	{% if thisclass == 0 %}
-	<form action="/selectdesk" method='POST'>
+{% if thisclass == 0 %}
+<div class="selectclasswrapper">
+	<form action="/selectdesk" method='POST' class="form-group">
 	<div class="title-text">Select Class</div>
-	<select name="classname" onchange="this.form.submit()">
+	<select name="classname" class="form-control form-classid"onchange="this.form.submit()">
 		<option>-</option>
 		{% for c in classes %}
 			<option value={{c[0]}}>{{c[1]}}</option>
 		{% endfor %}
 	</select>
 	</form>
-	{% endif %}
-	</br> </br>
-	
-	{% if thisclass != 0 %}
-	<form action="/pam" method='POST'>
-	{% for i in range(0, rows)%}
-		{% for j in range(0, columns)%}
-			{% if (j+i*columns) in desks %}
-				<img src="static/css/singleseat.png" height="100" width="100" style="opacity: 0.5;">
-			{% else %}
-				<button name={{thisclass|string + "-" + i|string + "-" + j|string}} ><img src="static/css/singleseat.png" height="100" width="100"></button>
-			{% endif %}
-		{% endfor %}
-	</br>
-	{% endfor %}
-	<img src="static/css/teacherdesk.png" height="100" width="200">
-	</form>
-	{% endif %}
-
 </div>
+{% endif %}
+	
+{% if thisclass != 0 %}
+<div class="selectdeskwrapper">
+	<div class="selectdesk">
+		<div class="classicon">
+			<img src="static/css/classicon.png" height="75" width="75">
+		</div>
+		<div class="title-text">Class: {{ cname }}</div>
+	
+		<h2>Please select your desk: </h2>
+		<form action="/pam" method='POST' id="selectdeskform">
+		{% for i in range(0, rows)%}
+			{% for j in range(0, columns)%}
+				{% if (j+i*columns) in desks %}
+					<img src="static/css/singleseat.png" height="100" width="100" style="opacity: 0.5;">
+				{% else %}
+					<button name={{thisclass|string + "-" + i|string + "-" + j|string}} class="deskbutton" ><img src="static/css/singleseat.png" height="100" width="100"></button>
+				{% endif %}
+			{% endfor %}
+		</br>
+		{% endfor %}
+		</form>
+	</div>
+</div>
+{% endif %}
 {% endblock %}

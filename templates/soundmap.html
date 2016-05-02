@@ -6,26 +6,68 @@
 		<div id="slider"></div>
 		<p>
 			<input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-		</p>
-
-		<div id="calendar" class="yui3-skin-sam">
-			<div class="yui3-u">
-			     <!-- Container for the calendar -->
-			     <div id="mycalendar"></div>
-			</div>
-		</div>
-		<p>
-			<div id="links" style="padding-left:20px;">
-		    	Selected date: <span id="selecteddate"></span>
-			</div>
 		</p>		
 	</div>
-    </br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
-
+<div id="heatmapContainerWrapper">
+  	<div id="heatmapContainer">
+		{% for i in range(0, 3)%}
+			{% for j in range(0, 4)%}
+				<img src="static/css/singleseat.png" height="100" width="100" style="margin-left: {{ (720-100*4)/(4+1) }}px; margin-top: {{ (512-100*3)/(3+1) }}px;" />
+			{% endfor %}
+			</br>
+		{% endfor %}
+  	</div>
 </div>
 {% endblock %}
+
 {% block script %}
 <script type="text/javascript">
+	$(document).ready(function(){
+	  	var heatmapInstance = h337.create({
+	    	// only container is required, the rest will be defaults
+	    	container:  document.getElementById('heatmapContainer'),
+	  	});
+
+		// now generate some random data
+		var points = [];
+		var width = 720;
+		var height = 512;
+		var radius = 250;
+
+		points.push({
+			x: 196,
+			y: 170.67,
+			value: 0.196,
+			radius: radius
+		});
+		points.push({
+			x: 524,
+			y: 170.67,
+			value: 0.042,
+			radius: radius
+		});
+		points.push({
+			x: 196,
+			y: 341.34,
+			value: 0.126,
+			radius: radius
+		});
+		points.push({
+			x: 524,
+			y: 341.34,
+			value: 0.088,
+			radius: radius
+		});
+		// heatmap data format
+		var data = { 
+		  max: 0.196, 
+		  data: points 
+		};
+		// if you have a set of datapoints always use setData instead of addData
+		// for data initialization
+		heatmapInstance.setData(data);
+	});
+
 	$(function() {
 		$("#slider").slider({
 			value: 0,
@@ -38,38 +80,6 @@
 		});
 		$("#amount").val("$"+$("#slider").slider("value"));
 	})
-
-	YUI().use('calendar', 'datatype-date', 'cssbutton',  function(Y) {
-
-	    // Create a new instance of calendar, placing it in
-	    // #mycalendar container, setting its width to 340px,
-	    // the flags for showing previous and next month's
-	    // dates in available empty cells to true, and setting
-	    // the date to today's date.
-	    var calendar = new Y.Calendar({
-	      contentBox: "#mycalendar",
-	      width:'340px',
-	      showPrevMonth: true,
-	      showNextMonth: true,
-	      date: new Date()}).render();
-
-	    // Get a reference to Y.DataType.Date
-	    var dtdate = Y.DataType.Date;
-
-	    // Listen to calendar's selectionChange event.
-	    calendar.on("selectionChange", function (ev) {
-
-	      // Get the date from the list of selected
-	      // dates returned with the event (since only
-	      // single selection is enabled by default,
-	      // we expect there to be only one date)
-	      var newDate = ev.newSelection[0];
-
-	      // Format the date and output it to a DOM
-	      // element.
-	      Y.one("#selecteddate").setHTML(dtdate.format(newDate));
-	    });
-	});
 </script>
 
 {% endblock %}

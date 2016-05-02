@@ -21,7 +21,7 @@ def home():
     # classId = int(request.form["classname"]) 
     deskId = request.args.get('deskId', '')
 
-    if not classId or not deskId:
+    if not classId and not deskId:
             classes = [(classroom.id, classroom.name) for classroom in Classroom.query.all()]
 
             return render_template('selectdesk.html', classes=classes, thisclass=0)
@@ -37,7 +37,7 @@ def home():
                 # resp.set_cookie('deskId', 'sequential')
                 return resp
             else:
-                return render_template('selectdesk.html', classes=classes, thisclass=classId, rows=thisclass.rows, columns=thisclass.columns, desks=desksDisabled)
+                return render_template('selectdesk.html', classes=classes, thisclass=classId, rows=thisclass.rows, columns=thisclass.columns, cname=thisclass.name, desks=desksDisabled)
         else:
         # classId = request.cookies.get('classId')
         # deskId  = request.cookies.get('deskId')
@@ -74,7 +74,7 @@ def select_desk():
         # resp.set_cookie('deskId', 'sequential')
         return resp
     else:
-        return render_template('selectdesk.html', classes=classes, thisclass=classId, rows=thisclass.rows, columns=thisclass.columns, desks=desksDisabled)
+        return render_template('selectdesk.html', classes=classes, thisclass=classId, rows=thisclass.rows, columns=thisclass.columns, cname=thisclass.name, desks=desksDisabled)
 
 @app.route('/pam', methods=['POST'])
 def pam():

@@ -321,3 +321,40 @@ input[name="tabs"]:checked + label {
   box-shadow: 0 0 0 5px #fff, 0 0 0 7px #fff, 0 0 0 15px #fff, 0 0 8px 15px #dcdcdc;
   z-index: 1;
 } 
+
+.selectdesk {
+  display: inline-block;
+  background: aliceblue;
+  width: 1040px;
+  border-radius: 10px;
+  padding-top: 2%;
+  padding-bottom: 2%;
+}
+
+.selectdesk > h2 {
+  font-size: 2em;
+  margin-left: 155px;
+  text-align: left;
+}
+
+.selectdeskwrapper {
+  margin-top: 2%;
+  text-align: center;
+}
+
+.classicon {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+form#selectdeskform {
+  display: inline-block;
+  width: 720px;
+  padding-bottom: 20px;
+  background: white;
+  border-radius: 10px;
+}
+
+.deskbutton {
+  background: white;
+}

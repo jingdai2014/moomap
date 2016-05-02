@@ -37,6 +37,7 @@
 	-->
 	
 	<div id="page-content-wrapper">
+		<label id="currentdate" class="title-text"></label>
 		<form id="heatmapform" class="tabs">
 	      	<input type="radio" name="tabs" id="pa" value="pa" checked="checked">
 			<label for="pa">
@@ -97,6 +98,8 @@
 		var opt = $('input[name="tabs"]:checked', '#heatmapform').val();
 		//var mapTime = $('#time').val();
 		var mapTime = $('input[name="selectedtime"]:checked', '#toggleform').val();
+		document.getElementById('currentdate').innerText = mapTime.substring(0,14).split('_').join(' ');
+
 		var classId = $('#classid').val();
 		$( "#heatmapContainerWrapper" ).load( "/heatmap", {time: mapTime, classid: classId, optType: opt});
 	}
