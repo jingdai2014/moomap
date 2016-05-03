@@ -63,8 +63,8 @@ function createHeatmap(pams, rows, columns, type) {// minimal heatmap instance c
     //   max = val;
     // }
 
-    var xdist = (720-100*columns)/(columns+1);
-    var ydist = (512-100*rows)/(rows+1);
+    var xdist = (840-100*columns)/(columns+1);
+    var ydist = (600-100*rows)/(rows+1);
 
     var radius = xdist+150;
     var jj = Math.floor(p.deskId/columns);
