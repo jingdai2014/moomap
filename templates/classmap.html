@@ -110,13 +110,17 @@
 	});
 
 	YUI().use('calendar', 'datatype-date', 'cssbutton',  function(Y) {
+		var latestDate = Y.Date.parse("{{timeGroup[0][1][0:14]}}");
 	    var calendar = new Y.Calendar({
 	      contentBox: "#mycalendar",
 	      width:'340px',
 	      showPrevMonth: false,
 	      showNextMonth: false,
-	      date: new Date(2016, 3, 1)}).render();
-
+	      date: latestDate}).render();
+	    
+	    //console.log(latestDate);
+	    //calendar.selectDates(new Date());
+	    calendar.selectDates(latestDate);
 	    // Get a reference to Y.DataType.Date
 	    var dtdate = Y.DataType.Date;
 
