@@ -98,7 +98,7 @@
 		var opt = $('input[name="tabs"]:checked', '#heatmapform').val();
 		//var mapTime = $('#time').val();
 		var mapTime = $('input[name="selectedtime"]:checked', '#toggleform').val();
-		document.getElementById('currentdate').innerText = mapTime.substring(0,14).split('_').join(' ');
+		document.getElementById('currentdate').innerText = mapTime.split('-')[0].split('_').join(' ');
 
 		var classId = $('#classid').val();
 		$( "#heatmapContainerWrapper" ).load( "/heatmap", {time: mapTime, classid: classId, optType: opt});
@@ -110,7 +110,8 @@
 	});
 
 	YUI().use('calendar', 'datatype-date', 'cssbutton',  function(Y) {
-		var latestDate = Y.Date.parse("{{timeGroup[0][1][0:14]}}");
+		var latestDate = Y.Date.parse("{{timeGroup[0][1].split("-")[0][:-1]}}");
+		console.log(latestDate);
 	    var calendar = new Y.Calendar({
 	      contentBox: "#mycalendar",
 	      width:'340px',
@@ -136,7 +137,8 @@
 	      //console.log(newDate);
 	      var intime = [];
 	      {% for tg in timeGroup %}
-	      	var curdate = "{{tg[1][0:14]}}";
+	      	var curdate = "{{tg[1].split("-")[0][:-1]}}";
+	      	console.log(curdate);
 	      	if (curdate == newDate){
 	      		intime.push("{{tg[0]}}");
 	      	}

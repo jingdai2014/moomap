@@ -32,35 +32,37 @@
 		var points = [];
 		var width = 720;
 		var height = 512;
-		var radius = 250;
+		var radius = 400;
+		
+		points.push({
+			x: 524,
+			y: 170.67,
+			value: 175.553,
+			radius: radius
+		});
 
 		points.push({
 			x: 196,
 			y: 170.67,
-			value: 0.196,
+			value: 74.767,
 			radius: radius
 		});
 		points.push({
 			x: 524,
-			y: 170.67,
-			value: 0.042,
+			y: 341.34,
+			value: 188.645,
 			radius: radius
 		});
 		points.push({
 			x: 196,
 			y: 341.34,
-			value: 0.126,
+			value: 105.393,
 			radius: radius
 		});
-		points.push({
-			x: 524,
-			y: 341.34,
-			value: 0.088,
-			radius: radius
-		});
+	
 		// heatmap data format
 		var data = { 
-		  max: 0.196, 
+		  max: 184.9, 
 		  data: points 
 		};
 		// if you have a set of datapoints always use setData instead of addData
