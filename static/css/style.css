@@ -20,13 +20,13 @@ form {
   display: inline-block;
   z-index: 2;
   position: relative;
-  width:720px; 
-  height:512px;
+  width:840px; 
+  height:600px;
   box-shadow: 0 0 0 3px #fff, 0 0 0 5px #fff, 0 0 0 10px #fff, 0 0 2px 10px #dcdcdc;
   background: white;
 }
 
-#heatmapContainer { width:720px; height:512px; position:absolute; opacity: 0.7; text-align: left;}
+#heatmapContainer { width:840px; height:600px; position:absolute; opacity: 0.7; text-align: left;}
 
 #heatmapform {
   margin-top: 20px;
@@ -283,7 +283,7 @@ input[type=submit]:active{
 }
 
 .tabs {
-    max-width: 740px;
+    max-width: 840px;
     float: none;
     list-style: none;
     padding: 0;
