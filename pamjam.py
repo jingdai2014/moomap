@@ -337,7 +337,12 @@ def sound():
 def thanks():
     classId = request.args.get('classId', '')
     deskId = request.args.get('deskId', '')
-    return render_template('thanks.html', classId=classId, deskId=deskId)
+    thisclass = Classroom.query.filter_by(id=int(classId)).first()
+    if thisclass.sequential:
+        sequential = 'sq'
+    else:
+        sequential = 'nsq'
+    return render_template('thanks.html', classId=classId, deskId=deskId, sequential=sequential)
 
 def redirect_url(default='home'):
     return request.args.get('home') or \

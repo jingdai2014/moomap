@@ -1,7 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
 <div class="thankswrapper">
-	<a href="/?classId={{classId}}&deskId={{deskId}}"><img class="check-img" src="../static/css/checkbtn.png"></img></a>
+	{% if sequential == 'sq' %}
+		<a href="/?classId={{classId}}&deskId={{deskId}}"><img class="check-img" src="../static/css/checkbtn.png"></img></a>
+	{% else %}
+		<img class="check-img" src="../static/css/checkbtn.png"></img>
+	{% endif %}
 	<div class="title-text">Thank you!</div>
 </div>
 
