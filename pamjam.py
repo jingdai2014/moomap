@@ -106,7 +106,7 @@ def delete_cookie():
     return resp
 
 @app.route('/add', methods=['POST'])
-def pick_color():
+def pick_pam():
     pam_tags = [(1, 'afraid', 1, 4), (2, 'tense', 2, 4), (3, 'excited', 3, 4), (4, 'delighted', 4, 4), (5, 'frustrated', 1, 3), 
     (6, 'angry', 2, 3), (7, 'happy', 3, 3), (8, 'glad', 4, 3), (9, 'miserable', 1, 2), (10, 'sad', 2, 2), 
     (11, 'calm', 3, 2), (12, 'satisfied', 4, 2), (13, 'gloomy', 1, 1), (14, 'tired', 2, 1), (15, 'sleepy', 3, 1), 
@@ -179,10 +179,6 @@ def selectclass():
 
     return render_template('selectclass.html', classes = classnames)
 
-# @app.route('/modifyclass')
-# def modifyclass():
-
-
 @app.route('/registerclass')
 def register():
     return render_template('register.html')
@@ -228,7 +224,6 @@ def modifyclass():
 
     desks = Desk.query.filter_by(classId=classId).all()
     disabledDesks = [str(d.row)+'-'+str(d.column) for d in desks if d.enabled is False]
-    # return render_template('modifyclass.html', classes=classes, thisclass=0)
     return render_template('modifyclass.html', classes=classes, thisclass=classId, name=thisclass.name, rows=thisclass.rows, columns=thisclass.columns, disabledDesks=disabledDesks, sequential=thisclass.sequential)
 
 @app.route('/confirmmodify', methods=['POST'])
@@ -371,7 +366,6 @@ def post_heatmap(req):
         mapTime = timeGroup[0][1]
 
     timeline = datetime.datetime.strptime(mapTime, "%B %d, %Y - %H:%M") - datetime.timedelta(minutes = 10)
-    # return str(timeline)
     pclass = Pam.query.filter(Pam.classId == int(request.form['classid'])).filter(Pam.time >= timeline).all()
 
     pams = []
@@ -389,7 +383,6 @@ def post_heatmap(req):
 
     return ({"pam": pams}, c.rows, c.columns, timeGroup, mapTime, classId)
     # return render_template(url, pams={"pam": pams}, rows=c.rows, columns=c.columns, timeGroup=timeGroup, mapTime=mapTime, classId=classId)
-
 
 if __name__ == '__main__':
 	app.run(debug=True)
